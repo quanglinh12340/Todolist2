@@ -14,6 +14,19 @@ const Todo = () => {
 
   const titleInputRef = useRef(null);
 
+  useEffect(() => {
+    const savedTodos = JSON.parse(localStorage.getItem("todos"));
+    if (savedTodos) {
+      setAllTodos(savedTodos);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (allTodos.length > 0) {
+      localStorage.setItem("todos", JSON.stringify(allTodos));
+    }
+  }, [allTodos]);
+
   const handleAddTodos = () => {
     const newTodos = { title: newTitle, description: newDescription };
     const updateTodos = [...allTodos, newTodos];
@@ -22,16 +35,6 @@ const Todo = () => {
     setNewDecription("");
     titleInputRef.current.focus();
   };
-
-  useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(allTodos));
-  }, [allTodos]);
-  useEffect(() => {
-    const savedTodos = JSON.parse(localStorage.getItem("todos"));
-    if (savedTodos) {
-      setAllTodos(savedTodos);
-    }
-  }, []);
 
   return (
     <>
