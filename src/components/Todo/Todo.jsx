@@ -13,6 +13,7 @@ const Todo = () => {
   const [isCompleteScreen, setIsCompleteScreen] = useState(false);
 
   const titleInputRef = useRef(null);
+  const isFirstRender = useRef(true); // Thêm cờ để kiểm tra lần render đầu tiên
 
   useEffect(() => {
     const savedTodos = JSON.parse(localStorage.getItem("todos"));
@@ -22,7 +23,9 @@ const Todo = () => {
   }, []);
 
   useEffect(() => {
-    if (allTodos.length > 0) {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+    } else {
       localStorage.setItem("todos", JSON.stringify(allTodos));
     }
   }, [allTodos]);
@@ -34,6 +37,12 @@ const Todo = () => {
     setNewTitle("");
     setNewDecription("");
     titleInputRef.current.focus();
+  };
+
+  const handleDeleteTodos = (index) => {
+    const reducedTodo = [...allTodos];
+    reducedTodo.splice(index, 1);
+    setAllTodos(reducedTodo);
   };
 
   return (
@@ -96,6 +105,7 @@ const Todo = () => {
                   <FontAwesomeIcon
                     className={cx("icon-delete")}
                     icon={faTrash}
+                    onClick={() => handleDeleteTodos(index)}
                   />
                   <FontAwesomeIcon
                     className={cx("icon-check")}
